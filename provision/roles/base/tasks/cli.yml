@@ -1,0 +1,37 @@
+- name: Make sure antigen is available
+  aur_build:
+    name:
+      - antigen
+
+- name: Make sure zsh and antigen are installed
+  community.general.pacman:
+    name:
+      - antigen
+      - zsh
+    update_cache: yes
+    state: present
+  become: yes
+
+- name: Copy zsh configuration
+  ansible.builtin.copy:
+    src: .zshrc
+    dest: /home/charles/
+    owner: charles
+    group: charles
+    mode: u=rw,g=r,o=r
+
+- name: Copy tmux configuration
+  ansible.builtin.copy:
+    src: .tmux.conf
+    dest: /home/charles/
+    owner: charles
+    group: charles
+    mode: u=rw,g=r,o=r
+
+
+- name: Use zsh as a shell
+  ansible.builtin.user:
+    name: charles
+    shell: /usr/bin/zsh
+  become: yes
+

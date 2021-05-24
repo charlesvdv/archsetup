@@ -1,0 +1,4 @@
+- hosts: test_vm
+  roles:
+    - aur-build
+    - base

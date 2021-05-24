@@ -1,0 +1,8 @@
+- name: Make sure everyday applications are installed
+  community.general.pacman:
+    name:
+      - chromium
+      - firefox
+      - libreoffice-still
+    state: present
+  become: yes

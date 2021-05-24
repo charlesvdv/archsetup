@@ -1,0 +1,6 @@
+- name: Make sure ntp sync is started
+  systemd:
+    name: systemd-timesyncd
+    state: started
+    enabled: yes
+  become: yes

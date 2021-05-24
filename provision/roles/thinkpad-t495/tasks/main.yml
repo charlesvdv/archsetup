@@ -1,0 +1,16 @@
+- name: Make sure power saving tools are installed
+  community.general.pacman:
+    name:
+      - tlp
+      - acpi_call
+      - ethtool
+      - tp_smapi
+    state: present
+  become: yes
+
+- name: Make sure tlp is started
+  systemd:
+    name: tlp
+    state: started
+    enabled: yes
+  become: yes
