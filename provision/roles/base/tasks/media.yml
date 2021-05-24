@@ -1,0 +1,29 @@
+- name: Check if we need to import GPG spotify key
+  ansible.builtin.command:
+    cmd: gpg --list-keys D1742AD60D811D58
+  ignore_errors: yes
+  register: spotifygpgcheck
+  changed_when: False
+
+- name: Make sure the GPG spotify key is imported
+  ansible.builtin.shell:
+    cmd: curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import -
+  when: spotifygpgcheck.rc != 0
+
+- name: Make sure spotify and peerflix are availabe in the database
+  aur_build:
+    name: 
+      - spotify
+      - peerflix
+
+- name: Make sure media application are installed
+  community.general.pacman:
+    name: 
+      - vlc
+      - mpv
+      - transmission-gtk
+      - spotify
+      - peerflix
+    update_cache: yes
+    state: present
+  become: yes

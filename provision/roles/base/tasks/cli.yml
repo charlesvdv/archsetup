@@ -1,0 +1,54 @@
+- name: Make sure shell deps are available
+  aur_build:
+    name:
+      - antigen
+      - autojump
+
+- name: Make sure zsh and co are installed
+  community.general.pacman:
+    name:
+      - antigen
+      - autojump
+      - zsh
+      - starship
+      - noto-fonts-emoji # optional dep for starship
+      - adobe-source-code-pro-fonts
+    update_cache: yes
+    state: present
+  become: yes
+
+- name: Copy zsh configuration
+  ansible.builtin.copy:
+    src: .zshrc
+    dest: /home/charles/
+    owner: charles
+    group: charles
+    mode: u=rw,g=r,o=r
+
+- name: Copy dircolors configuration
+  ansible.builtin.copy:
+    src: .dir_colors
+    dest: /home/charles/
+    owner: charles
+    group: charles
+    mode: u=rw,g=r,o=r
+
+- name: Install tpm to handle tmux plugins
+  ansible.builtin.git:
+    repo: https://github.com/tmux-plugins/tpm
+    dest: /home/charles/.tmux/plugins/tpm
+
+- name: Copy tmux configuration
+  ansible.builtin.copy:
+    src: .tmux.conf
+    dest: /home/charles/
+    owner: charles
+    group: charles
+    mode: u=rw,g=r,o=r
+
+- name: Use zsh as a shell
+  ansible.builtin.user:
+    name: charles
+    shell: /usr/bin/zsh
+  become: yes
+

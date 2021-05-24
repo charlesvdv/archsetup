@@ -1,0 +1,38 @@
+---
+
+- name: Make sure the directory containing the aur repository exists
+  ansible.builtin.file:
+    path: "{{ database_path }}"
+    state: directory
+    mode: '0777'
+  become: yes
+
+- name: Make sure the aur repository exists
+  ansible.builtin.command:
+    cmd: "repo-add {{ database_path }}/{{ database_name }}.db.tar.zst"
+    creates: "{{ database_path }}/{{ database_name }}.db.tar.zst"
+  register: createdb
+
+- name: Add the database configuration file
+  ansible.builtin.template:
+    src: aur.conf.j2
+    dest: "/etc/pacman.d/{{ database_name }}.conf"
+    mode: '0644'
+    owner: root
+    group: root
+  become: yes
+
+- name: Update the pacman.conf file to include the database configuration file
+  ansible.builtin.lineinfile:
+    path: /etc/pacman.conf
+    line: Include = /etc/pacman.d/{{ database_name }}.conf
+    regexp: '^Include = /etc/pacman.d/{{ database_name }}\.conf$'
+    insertafter: EOF
+    state: present
+  become: yes
+
+- name: Make sure the aur repository is properly sync-ed
+  community.general.pacman:
+    update_cache: yes
+  become: yes
+  when: createdb.changed

@@ -1,0 +1,5 @@
+- hosts: local
+  roles:
+    - aur-build
+    - base
+    - thinkpad-t495

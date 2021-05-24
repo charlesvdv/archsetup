@@ -1,0 +1,107 @@
+- name: Make sure gnome is installed
+  community.general.pacman:
+    name:
+      - gnome
+      - gdm
+      - ibus
+    state: present
+  become: yes
+
+- name: Make sure other gnome utils are installed
+  community.general.pacman:
+    name: 
+      - gnome-tweaks
+    state: present
+  become: yes
+  
+- name: Make sure gnome is started
+  systemd:
+    name: gdm
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Make sure pulseaudio is removed
+  community.general.pacman:
+    name:
+      - pulseaudio
+      - pulseaudio-bluetooth
+    state: absent
+    extra_args: -dd # Skip dependency check because we really want to install pipewire
+  become: yes
+
+- name: Make sure desktop building blocks are installed
+  community.general.pacman:
+    name:
+      - networkmanager
+      - pipewire
+      - pipewire-alsa
+      - pipewire-jack
+      - pipewire-pulse
+      # Optional pipewire dependency
+      - gst-plugin-pipewire
+      # Optional pipewire dependency
+      - pipewire-media-session
+      # For screen sharing with pipewire
+      - xdg-desktop-portal-gtk
+    state: present
+  become: yes
+
+- name: Make sure audio is started
+  systemd:
+    name: bluetooth
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Make sure psutils is correctly installed for dconf plugin
+  community.general.pacman:
+    name: python-psutil
+    state: present
+  become: yes
+
+- name: Configure correct keyboard in gnomes
+  community.general.dconf:
+    key: "/org/gnome/desktop/input-sources/sources"
+    value: "[('xkb', 'fr')]"
+    state: present
+
+- name: Use sane windows titlebar options
+  community.general.dconf:
+    key: "/org/gnome/desktop/wm/preferences/button-layout"
+    value: "'appmenu:minimize,maximize,close'"
+    state: present
+
+
+- name: Disable natural scrolling for touchpad
+  community.general.dconf:
+    key: "/org/gnome/desktop/peripherals/touchpad/natural-scroll"
+    value: "false"
+    state: present
+
+- name: Enable tap to click on touchpad
+  community.general.dconf:
+    key: "/org/gnome/desktop/peripherals/touchpad/tap-to-click"
+    value: "true"
+    state: present
+
+- name: Copy wallpaper locally
+  ansible.builtin.copy:
+    src: ozark-drones-jeV-LUEyJoE-unsplash.jpg
+    dest: /usr/share/backgrounds/gnome/custombackground.jpg
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
+  become: yes
+
+- name: Set the correct wallpaper for background
+  community.general.dconf:
+    key: "/org/gnome/desktop/background/picture-uri"
+    value: "'file:///usr/share/backgrounds/gnome/custombackground.jpg'"
+    state: present
+
+- name: Set the correct wallpaper for screensaver
+  community.general.dconf:
+    key: "/org/gnome/desktop/screensaver/picture-uri"
+    value: "'file:///usr/share/backgrounds/gnome/custombackground.jpg'"
+    state: present

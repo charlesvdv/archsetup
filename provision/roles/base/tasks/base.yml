@@ -1,0 +1,28 @@
+- name: Make sure ntp sync is started
+  systemd:
+    name: systemd-timesyncd
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Make sure reflector is installed
+  community.general.pacman:
+    name: reflector
+    state: present
+  become: yes
+
+- name: Copy reflector config
+  ansible.builtin.copy:
+    src: reflector.conf
+    dest: /etc/xdg/reflector/reflector.conf
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
+  become: yes
+
+- name: Make sure ntp sync is started
+  systemd:
+    name: reflector.timer
+    state: started
+    enabled: yes
+  become: yes

@@ -1,0 +1,20 @@
+- name: Make sure everyday applications are installed
+  community.general.pacman:
+    name:
+      - chromium
+      - firefox
+      - libreoffice-still
+      - firefox-developer-edition
+    state: present
+  become: yes
+
+- name: Check if we need to change the default web browser
+  ansible.builtin.command:
+    cmd: xdg-settings check default-web-browser firefox-developer-edition.desktop
+  register: defaultbrowsercheck
+  changed_when: False
+
+- name: Make sure firefox dev edition is set as default browser
+  ansible.builtin.shell:
+    cmd: xdg-settings set default-web-browser firefox-developer-edition.desktop
+  when: defaultbrowsercheck.stdout != 'yes'

@@ -1,0 +1,81 @@
+- name: Make sure code extensions are available
+  aur_build:
+    name:
+      - code-marketplace
+      - code-features
+
+- name: Make sure development tooling is installed
+  community.general.pacman:
+    name: 
+      - posix
+      - code
+      - code-marketplace
+      - code-features
+      - neovim
+      - git
+      - tig
+      - firefox-developer-edition
+      - alacritty
+      - tmux
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Make sure vscode extensions are installed
+  vscode_extension:
+    name:
+      - golang.go
+      - rust-lang.rust
+      - ms-python.vscode-pylance
+      - ms-vscode.cpptools
+      - arcticicestudio.nord-visual-studio-code
+
+- name: Create directory for the alacritty config
+  ansible.builtin.file:
+    path: /home/charles/.config/alacritty/
+    state: directory
+
+- name: Copy alacritty config
+  ansible.builtin.copy:
+    src: alacritty.yml
+    dest: /home/charles/.config/alacritty/alacritty.yml
+    owner: charles
+    group: charles
+    mode: u=rw,g=r,o=r
+
+- name: Make sure ops tooling is installed
+  community.general.pacman:
+    name: 
+      - ansible
+      - docker
+      - docker-compose
+    state: present
+  become: yes
+
+- name: Make sure dev language & build tooling is installed
+  community.general.pacman:
+    name: 
+      - rustup
+      - arduino
+      - cmake
+      - go
+      - ninja
+      - nodejs
+      - yarn
+      - npm
+      - mypy
+    state: present
+  become: yes
+
+- name: Make sure teamviewer is available
+  aur_build:
+    name: 
+      - teamviewer
+
+- name: Make sure teamviewer is installed
+  community.general.pacman:
+    name: 
+      - teamviewer
+    update_cache: yes
+    state: present
+  become: yes

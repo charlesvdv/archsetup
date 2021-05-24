@@ -1,0 +1,3 @@
+---
+database_name: aur
+database_path: "/var/local/{{ database_name }}-repo"
