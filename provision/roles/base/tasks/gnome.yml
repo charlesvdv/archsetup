@@ -87,7 +87,7 @@
 
 - name: Copy wallpaper locally
   ansible.builtin.copy:
-    src: ozark-drones-jeV-LUEyJoE-unsplash.jpg
+    src: spacex--p-KCm6xB9I-unsplash.jpg
     dest: /usr/share/backgrounds/gnome/custombackground.jpg
     owner: root
     group: root
