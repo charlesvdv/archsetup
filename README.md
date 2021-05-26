@@ -23,7 +23,7 @@ But it's still provide me some benefits for my day-to-day:
 
 ## structure
 
-The setup is structured in two folders: `[install](install/)` and `[provision](provision/)`
+The setup is structured in two folders: [`install`](install/) and [`provision`](provision/)
 
 ### `install`
 
@@ -62,4 +62,3 @@ if you stick with simple/common AUR packages, you rarely need advanced dependenc
 ```sh
 cd ./provision && ./run.sh
 ```
-
