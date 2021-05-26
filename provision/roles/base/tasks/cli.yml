@@ -52,3 +52,9 @@
     shell: /usr/bin/zsh
   become: yes
 
+- name: Make sure asciinema is installed
+  community.general.pacman:
+    name:
+      - asciinema
+    state: present
+  become: yes

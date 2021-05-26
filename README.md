@@ -51,6 +51,8 @@ And then, the script was executed in less than 1 minutes 30 seconds on my laptop
 `provision` contains a Ansible role to setup my laptop the way I want it. It includes various configuration files, 
 custom wallpaper, GNOME customization, ...
 
+[![asciicast](https://asciinema.org/a/416392.svg)](https://asciinema.org/a/416392)
+
 Probably the most interesting part is the custom role to download and build AUR packages to a local repository ([source](provision/roles/aur-build)).
 Unlike [kewlfft/ansible-aur](https://github.com/kewlfft/ansible-aur), this module don't need to create a user who 
 can execute `pacman` without password. This module also don't need any AUR helpers. Since the module cannot execute 
