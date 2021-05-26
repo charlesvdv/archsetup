@@ -7,10 +7,12 @@
     state: present
   become: yes
 
-- name: Make sure other gnome utils are installed
+- name: Make sure gnome customization tools are installed
   community.general.pacman:
     name: 
       - gnome-tweaks
+      - materia-gtk-theme
+      - papirus-icon-theme
     state: present
   become: yes
   
@@ -104,4 +106,16 @@
   community.general.dconf:
     key: "/org/gnome/desktop/screensaver/picture-uri"
     value: "'file:///usr/share/backgrounds/gnome/custombackground.jpg'"
+    state: present
+
+- name: Set the correct gnome theme
+  community.general.dconf:
+    key: "/org/gnome/desktop/interface/gtk-theme"
+    value: "'Materia'"
+    state: present
+
+- name: Set the correct icon theme
+  community.general.dconf:
+    key: "/org/gnome/desktop/interface/icon-theme"
+    value: "'Papirus'"
     state: present
