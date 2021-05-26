@@ -8,6 +8,7 @@
   community.general.pacman:
     name: 
       - posix
+      - htop
       - code
       - code-marketplace
       - code-features
