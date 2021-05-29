@@ -119,3 +119,9 @@
     key: "/org/gnome/desktop/interface/icon-theme"
     value: "'Papirus'"
     state: present
+
+- name: Don't sleep when power is plugged in
+  community.general.dconf:
+    key: "/org/gnome/settings-daemon/plugins/power/sleep-inactive-ac-type"
+    value: "'nothing'"
+    state: present
