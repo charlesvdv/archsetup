@@ -30,6 +30,7 @@
       - ms-python.vscode-pylance
       - ms-vscode.cpptools
       - arcticicestudio.nord-visual-studio-code
+      - bradlc.vscode-tailwindcss
 
 - name: Create directory for the alacritty config
   ansible.builtin.file:
@@ -50,7 +51,22 @@
       - ansible
       - docker
       - docker-compose
+      - whois
     state: present
+  become: yes
+
+- name: Add my user to docker group
+  ansible.builtin.user:
+    name: charles
+    groups: docker
+    append: yes
+  become: yes
+
+- name: Make sure docker daemon is started
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
   become: yes
 
 - name: Make sure dev language & build tooling is installed
