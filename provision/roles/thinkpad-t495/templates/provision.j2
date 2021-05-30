@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -e
+
+ansible-playbook -i {{ playbook_dir }}/inventory.yml --ask-become-pass {{ playbook_dir }}/thinkpad-t495.yml

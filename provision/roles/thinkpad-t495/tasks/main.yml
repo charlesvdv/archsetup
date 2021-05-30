@@ -14,3 +14,13 @@
     state: started
     enabled: yes
   become: yes
+
+- name: Add run_provision script for thinkpad t495
+  ansible.builtin.template:
+    src: provision.j2
+    dest: /usr/local/bin/provision
+    mode: '0755'
+    owner: root
+    group: root
+  become: yes
+  when: ansible_connection == 'local'
