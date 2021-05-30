@@ -125,3 +125,27 @@
     key: "/org/gnome/settings-daemon/plugins/power/sleep-inactive-ac-type"
     value: "'nothing'"
     state: present
+
+- name: Switch windows, not applications (part 1)
+  community.general.dconf:
+    key: "/org/gnome/desktop/wm/keybindings/switch-applications"
+    value: "@as []"
+    state: present
+
+- name: Switch windows, not applications (part 2)
+  community.general.dconf:
+    key: "/org/gnome/desktop/wm/keybindings/switch-applications-backward"
+    value: "@as []"
+    state: present
+
+- name: Switch windows, not applications (part 3)
+  community.general.dconf:
+    key: "/org/gnome/desktop/wm/keybindings/switch-windows"
+    value: "['<Alt>Tab']"
+    state: present
+
+- name: Switch windows, not applications (part 4)
+  community.general.dconf:
+    key: "/org/gnome/desktop/wm/keybindings/switch-windows-backward"
+    value: "['<Shift><Alt>Tab']"
+    state: present
