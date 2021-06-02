@@ -1,12 +1,5 @@
 ---
 
-- name: Make sure the system is updated
-  community.general.pacman:
-    update_cache: yes
-    upgrade: yes
-  become: yes
-  changed_when: False
-
 - import_tasks: base.yml
 - import_tasks: cli.yml
 - import_tasks: gnome.yml
