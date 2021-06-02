@@ -26,3 +26,12 @@
     state: started
     enabled: yes
   become: yes
+
+- name: Activate pacman parallel download
+  ansible.builtin.lineinfile:
+    path: /etc/pacman.conf
+    regexp: 'ParallelDownloads\s*='
+    line: 'ParallelDownloads = 5'
+    insertafter: '^\[options\]'
+    state: present
+  become: yes
