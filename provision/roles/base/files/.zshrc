@@ -9,6 +9,7 @@ antigen apply
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+set prompt off # disable default prompt
 eval "$(starship init zsh)"
 
 alias v='nvim'
