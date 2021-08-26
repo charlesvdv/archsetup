@@ -8,6 +8,17 @@
     state: present
   become: yes
 
+- name: Make sure ~/.config/environment.d/ exists
+  ansible.builtin.file:
+    path: /home/charles/.config/environment.d/
+    state: directory
+
+
+- name: Enable Wayland for firefox
+  ansible.builtin.copy:
+    content: 'MOZ_ENABLE_WAYLAND=1'
+    dest: /home/charles/.config/environment.d/firefox-wayland.conf
+
 - name: Check if we need to change the default web browser
   ansible.builtin.command:
     cmd: xdg-settings check default-web-browser firefox-developer-edition.desktop
