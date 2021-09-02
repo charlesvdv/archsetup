@@ -56,6 +56,25 @@
     enabled: yes
   become: yes
 
+- name: Make sure gnome extension are available in the pacman database
+  aur_build:
+    name: 
+      - gnome-shell-extension-espresso-git
+
+- name: Make sure gnome extension are installed
+  community.general.pacman:
+    name: 
+      - gnome-shell-extension-espresso-git
+    update_cache: yes
+    state: present
+  become: yes
+
+- name: Enable gnome extensions
+  community.general.dconf:
+    key: "/org/gnome/shell/enabled-extensions"
+    value: "['espresso@coadmunkee.github.com']"
+    state: present
+
 - name: Make sure psutils is correctly installed for dconf plugin
   community.general.pacman:
     name: python-psutil
@@ -73,7 +92,6 @@
     key: "/org/gnome/desktop/wm/preferences/button-layout"
     value: "'appmenu:minimize,maximize,close'"
     state: present
-
 
 - name: Disable natural scrolling for touchpad
   community.general.dconf:
