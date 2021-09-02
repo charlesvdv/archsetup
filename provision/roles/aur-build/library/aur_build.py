@@ -232,10 +232,14 @@ class PacmanDatabase:
     def install_package(self, package_path: str):
         self._module.run_command(['repo-add', self._db_path, package_path], check_rc=True)
         shutil.move(package_path, self._directory)
-        # shutil.move(sig_path, self._directory)
 
     def get_name(self) -> str:
         return self._name
+
+
+def vercmp(module: AnsibleModule, ver1: str, ver2: str) -> int:
+    _, stdout, _ = module.run_command(['vercmp', ver1, ver2], check_rc=True)
+    return int(stdout.strip())
 
 
 def is_package_installed(module: AnsibleModule, package: str) -> bool: 
@@ -294,15 +298,15 @@ class Resolver:
     _packages_to_resolve: List[str]
     _packages_to_build: Set[Package]
     _packages_already_checked: Set[str]
-    _aur_database: str
+    _database: PacmanDatabase
     _module: AnsibleModule
 
-    def __init__(self, module: AnsibleModule, aur_database: str) -> None:
+    def __init__(self, module: AnsibleModule, database: PacmanDatabase) -> None:
         self._module = module
         self._packages_to_resolve = []
         self._packages_to_build = set()
         self._packages_already_checked = set()
-        self._aur_database = aur_database
+        self._database = database
 
     def resolve(self, packages: List[str]) -> Set[Package]:
         self._packages_to_resolve.extend(packages)
@@ -325,10 +329,7 @@ class Resolver:
         if not is_package_available(self._module, package.name):
             return True
 
-        # If a package has a different version than the version installed. It probably 
-        # means the installed version is out-of-date.
-        # There may be a better heuristic...
-        if package.version != get_available_package_version(self._module, package.name):
+        if vercmp(self._module, package.version, get_available_package_version(self._module, package.name)) > 0:
             return True
         
         return False
@@ -345,7 +346,7 @@ class Resolver:
 
         # If the package is already in the AUR database we populate, it should be probably 
         # checked for an update.
-        if self._aur_database == get_package_database(self._module, package):
+        if self._database.get_name() == get_package_database(self._module, package):
             return True
 
         return False
@@ -410,7 +411,7 @@ def main():
     config = PacmanConfig()
     database = PacmanDatabase(module, config, module.params.get('database'))
 
-    resolver = Resolver(module, database.get_name())
+    resolver = Resolver(module, database)
     packages_to_build = resolver.resolve(module.params.get('name'))
     changed: bool = len(packages_to_build) != 0
 
