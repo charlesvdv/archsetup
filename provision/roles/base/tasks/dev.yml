@@ -81,6 +81,10 @@
       - yarn
       - npm
       - mypy
+      - maven
+      - jdk8-openjdk
+      - jdk11-openjdk
+      - jdk-openjdk
     state: present
   become: yes
 
@@ -93,6 +97,19 @@
   community.general.pacman:
     name: 
       - teamviewer
+    update_cache: yes
+    state: present
+  become: yes
+
+- name: Make sure intellij is available
+  aur_build:
+    name: 
+      - intellij-idea-community-edition-jre
+
+- name: Make sure intellij is installed
+  community.general.pacman:
+    name: 
+      - intellij-idea-community-edition-jre
     update_cache: yes
     state: present
   become: yes
